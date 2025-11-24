@@ -1,54 +1,38 @@
 package main
 
-import (
-	"fmt"
-	"math"
-)
+import "fmt"
+
+//Defer adia a chamada de uma função até que a  função principal retorne
+//os argumentos sao validados imediatamente, mas a função é chamada após o retorno da função principal.
+//Defer segue a oredem do Last In First Out. O escopo do Defer está sempre atrelado a função ao redor dele
 
 //func main() {
-//	do(1)
-//	do(2)
-//	do(3)
+//	x := doDefer()
+//	fmt.Println(x)
 //}
 //
-//func do(x int) {
-//	switch x {
-//	case 1:
-//		fmt.Println(1)
-//	case 2:
-//		fmt.Println(2)
-//	default:
-//		fmt.Println("outra coisa")
-//	}
+//func doDefer() int {
+//	defer fmt.Println("world")
+//	fmt.Println("hello")
+//	return 10
 //}
 
 func main() {
-	switch x := math.Sqrt(4); x {
-	case 2:
-		fmt.Println(" resultado e 2")
-	default:
-		fmt.Println("algo deu errado")
-	}
+	doDefer()
 }
 
-//func isWeekend(x time.Time) bool {
-//	switch x.Weekday() {
-//	case time.Sunday, time.Saturday
-//		return true
-//	default:
-//		return false
-//	}
+//func doDefer() {
+//	defer fmt.Println(3)
+//	defer fmt.Println(2)
+//	fmt.Println(1)
 //}
 
-func do(x any) {
-	switch t := x.(type) {
-	case string:
-		takeString(t)
-	case int:
-	case nil:
-	}
-}
+func doDefer() {
+	x := 10
+	defer func() {
+		fmt.Println(x)
+	}()
 
-func takeString(s string) {
-	fmt.Println(s)
+	x = 50
+	fmt.Println(x)
 }
