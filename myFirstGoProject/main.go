@@ -1,38 +1,58 @@
 package main
 
-import "fmt"
-
-//Defer adia a chamada de uma função até que a  função principal retorne
-//os argumentos sao validados imediatamente, mas a função é chamada após o retorno da função principal.
-//Defer segue a oredem do Last In First Out. O escopo do Defer está sempre atrelado a função ao redor dele
-
-//func main() {
-//	x := doDefer()
-//	fmt.Println(x)
-//}
-//
-//func doDefer() int {
-//	defer fmt.Println("world")
-//	fmt.Println("hello")
-//	return 10
-//}
+import (
+	"bufio"
+	"fmt"
+	"math/rand"
+	"os"
+	"strconv"
+	"strings"
+)
 
 func main() {
-	doDefer()
-}
+	fmt.Println("Jogo da Adivinhação")
+	fmt.Println(
+		"Um número aleatório será sorteado. Tente acertar. O número é um inteiro entre 0 a 100")
 
-//func doDefer() {
-//	defer fmt.Println(3)
-//	defer fmt.Println(2)
-//	fmt.Println(1)
-//}
+	x := rand.Int63n(101)
+	scanner := bufio.NewScanner(os.Stdin)
+	chutes := [10]int64{}
 
-func doDefer() {
-	x := 10
-	defer func() {
-		fmt.Println(x)
-	}()
+	for i := range chutes {
+		fmt.Println("Qual é o seu chute?")
+		scanner.Scan()
+		chute := scanner.Text()
+		chute = strings.TrimSpace(chute)
 
-	x = 50
-	fmt.Println(x)
+		chuteInt, err := strconv.ParseInt(chute, 10, 64)
+		if err != nil {
+			fmt.Println("O seu chute  tem que ser um número inteiro")
+			return
+		}
+
+		switch {
+		case chuteInt < x:
+			fmt.Println("Você errou. O número sorteado é maior que", chuteInt)
+		case chuteInt > x:
+			fmt.Println("Você errou. O número sorteado é menor que", chuteInt)
+		case chuteInt == x:
+			fmt.Printf(
+				"Parabéns! Você acertou o número,que era: %d\n"+
+					"Você acertou em %d tentativas.\n"+
+					"Essas foram as suas tentativas: %v\n",
+				x, i+1, chutes[:i],
+			)
+			return
+		}
+
+		chutes[i] = chuteInt
+	}
+
+	fmt.Printf(
+		"Infelizmente, você não acertou o número,que era: %d\n"+
+			"Você teve 10 tentativas.\n"+
+			"Essas foram as suas tentativas: %v\n",
+		x, chutes,
+	)
+
 }
